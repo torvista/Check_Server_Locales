@@ -213,8 +213,8 @@ check_locales($spanish, 'Spanish');
 </p>
 <p>Windows Language Strings: <a href="https://docs.microsoft.com/en-us/cpp/c-runtime-library/language-strings?view=vs-2019" target="_blank">docs.microsoft.com/en-us/cpp/c-runtime-library/language-strings?view=vs-2019</a>
 </p>
-<p>Windows Language Code Identifiers (LCID): <a href=https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/a9eac961-e77d-41a6-90a5-ce1a8b0cdb9c"
-                                                     target="_blank">docs.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/a9eac961-e77d-41a6-90a5-ce1a8b0cdb9c</a>
+<p>Windows Language Code Identifiers (LCID): <a href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/70feba9f-294e-491e-b6eb-56532684c37f"
+                                                     target="_blank">https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/70feba9f-294e-491e-b6eb-56532684c37f</a>
 </p>
 <p>Locales and Languages (Windows): <a
             href="https://docs.microsoft.com/en-us/windows/desktop/intl/locales-and-languages" target="_blank">docs.microsoft.com/en-us/windows/desktop/intl/locales-and-languages</a>x
