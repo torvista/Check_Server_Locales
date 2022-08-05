@@ -1,6 +1,6 @@
-# Zen-Cart-Test-Server-Locales
-Checks if specific locales are installed on a server (Windows/*nix).
+# Check Server Locales
+Checks if specific locales are installed on a server (Windows/*nix) and so confirm what locale you may use for LC_TIME in the two main Zen Cart language files.
 
-Does not need Zen Cart to run.
+It does not need Zen Cart to execute.
 
 Instructions in the script.
