@@ -1,6 +1,6 @@
 <?php
 //find_locales.php by torvista
-$version = 'v1.0';
+$version = 'v1.1';
 /** This utility is intended to be used to check what locales are installed on this server and so what locale you may put in the main language constants file (the two equivalents to english.php)
  *
  * USAGE INSTRUCTIONS:
@@ -11,8 +11,9 @@ $version = 'v1.0';
  */
 
 //add more testing names as required
+
 //English
-$english = array(
+$english = [
     'en',
     'english_gbr',
     'english_britain',
@@ -31,16 +32,16 @@ $english = array(
     'english_united states',
     'english_united-states',
     'english_us'
-);
+];
 
 //Dutch
-$dutch = array('nl_NL.utf8', 'nl', 'nl-NL', 'nld_nld');
+$dutch = ['nl_NL.utf8', 'nl', 'nl-NL', 'nld_nld'];
 
 //German
-$german = array('de', 'de_DE@euro', 'de_DE', 'deu_deu');
+$german = ['de', 'de_DE@euro', 'de_DE', 'deu_deu'];
 
 //Spanish
-$spanish = array(
+$spanish = [
     'es_utf8',
     'es',
     'es-ES',
@@ -53,14 +54,14 @@ $spanish = array(
     'spanish_spain',
     'es_ES.utf8',
     'es-es'
-);
+];
 //----------------------------------------------------------------------------------------------
 
 /**
  * @param $code
  * @param $language
  */
-function list_nix_locales($code, $language)
+function list_nix_locales($code, $language): void
 {
     echo "<h3>$language: using <em>system('locale -a | grep -i $code')</em></h3>";
     echo "<p>The available 'locale' strings for '$code' on this server are:</p>";
@@ -73,24 +74,19 @@ function list_nix_locales($code, $language)
  * @param $test_names
  * @param $language
  */
-function check_locales($test_names, $language)
+function check_locales($test_names, $language): void
 {
-    echo '<hr />';
+    echo '<hr>';
     echo "<h3>$language</h3>";
     foreach ($test_names as $value) {
-        echo '<hr style="margin-left:0;width:30%" />';
+        echo '<hr style="margin-left:0;width:30%">';
         echo "<p>test locale: '<em>$value</em>'</p>";
         $locale_found = setlocale(LC_TIME, $value);
 
-        if ($locale_found) {
-            echo "<p>locale '<em><strong>$locale_found</strong></em>' found for '<em>$value</em>'.";
-
-            if (stristr(PHP_OS, 'win')) {
-                echo utf8_encode('eg.: ' . strftime("%A %d %B %Y", mktime(0, 0, 0, 12, 23, 1978))) . ' (this text was utf8_encoded for the correct display of multibyte characters (accents) on Windows)</p>';
-            } else {//**nix
-            echo 'eg.: ' . strftime("%A %d %B %Y", mktime(0, 0, 0, 12, 23, 1978)) . '</p>';
-            }
-
+        if ($locale_found !== false) {
+            echo "<p>locale '<em><strong>$locale_found</strong></em>' found for '<em>$value</em>'.</p>";
+            $formatter = new IntlDateFormatter($value, IntlDateFormatter::FULL, IntlDateFormatter::FULL);
+            echo '<p>eg: ' . $formatter->format(time()) . '</p>';
         } else {
             echo "<p>no locale found for '<em>$value</em>'</p>";
         }
@@ -102,8 +98,7 @@ function check_locales($test_names, $language)
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title><?php echo(stristr(PHP_OS, "win") ? 'Windows' : 'Unix'); ?> Server - Test
-        Locales<?php echo(stristr(PHP_OS, "win") ? '- Windows' : '- Unix'); ?></title>
+    <title>Test Locales - <?php echo(stripos(PHP_OS_FAMILY, "win") !== false ? ' WINDOWS' : ' UNIX'); ?></title>
     <style>body {
             padding: 1em;
             font-family: Verdana, Geneva, sans-serif;
@@ -131,10 +126,13 @@ function check_locales($test_names, $language)
 <body>
 
 <h1>Test Server Locales - <?php echo $version; ?></h1>
-<p>Embedded in this script are lists/arrays of possible locales for both Windows and Unix-based servers for some languages. This script tests each one to see if it is installed on this server and so confirm what locale you may use for LC_TIME in the two main Zen Cart language files (english.php and their additional language equivalents).<br>The embedded lists are not comprehensive, please research and add to the arrays as per your needs.</p>
-
+<p>Embedded in this script are lists/arrays of possible locales for both Windows and Unix-based servers for some languages.<br>
+    This script tries each one to see if the operating system (Unix/Windows) accepts it/it is installed on this server and so confirm what locale you may use for LC_TIME in the two main Zen Cart
+    language files (english.php and their additional language equivalents).<br>
+    The embedded lists are not comprehensive, please research and add to the arrays as per your required language.</p>
+<hr>
 <?php
-if (!stristr(PHP_OS, "win")) { ?>
+if (stripos(PHP_OS_FAMILY, "win") === false) { ?>
     <h2>This is a UNIX server</h2>
     <?php
     //English en
@@ -148,25 +146,25 @@ if (!stristr(PHP_OS, "win")) { ?>
 
     //Spanish es
     list_nix_locales('es', 'Spanish');
+    
 } else { ?>
-
+    
     <h2>This is a WINDOWS server</h2>
     <p>It is possible to get a listing of all the installed locales in Windows with the Windows Powershell (requires
-        .net), as detailed <a
-                href="https://powershell.org/2013/04/getting-a-list-of-windows-language-locales-with-windows-powershell/"
-                target="_blank">here</a>:</p>
-    <p>Open Windows Powershell console, eg: <code>PS C:\Users\Steve></code></p>
-    <p><code>E</code>nter the command as shown to get the listing:</p>
-    <p><code>[System.Globalization.Cultureinfo]::GetCultures('AllCultures')</code></p>
-    <p>To be clever and get a csv file of this full listing (change the destination as required), use this set of
-        commands on one line (the semicolons concatenate the commnds):</p>
-    <code>Function global:GET-CULTURE {
-        [System.Globalization.Cultureinfo]::GetCultures('AllCultures') }; $locales=GET-CULTURE; $locales | EXPORT-CSV
-        D:locales.csv</code>
+        .net).</p>
+    <div style="margin-left: 50px">
+        <p>Open Windows Powershell console, eg: <code>PS C:\Users\Steve></code></p>
+        <p><code>E</code>nter the command as shown to get the listing:</p>
+        <p><code>[System.Globalization.Cultureinfo]::GetCultures('AllCultures')</code></p>
+        <p>To be clever and get a csv file of this full listing (change the destination as required), use this set of
+            commands on one line (the semicolons concatenate the commnds):</p>
+        <code>Function global:GET-CULTURE {
+            [System.Globalization.Cultureinfo]::GetCultures('AllCultures') }; $locales=GET-CULTURE; $locales | EXPORT-CSV
+            D:locales.csv</code>
+    </div>
     <p>See the references at the foot of this page to convince you to dump your Windows-based
         hosting and it's lack of support for utf-8:</p>
-    <p> Quote from Microsoft:
-    </p>
+    <p>Quote from Microsoft:</p>
     <blockquote>"The locale argument can take a locale name, a language string, a language string and country/region
         code, a code
         page, or a language string, country/region code, and code page. The set of available locale names, languages,
@@ -190,12 +188,10 @@ check_locales($german, 'German');
 check_locales($spanish, 'Spanish');
 
 ?>
-<hr/>
+<hr>
 <h1>Resources - "Read 'em and Weep"</h1>
-<p>UTF-8 background - The Secret of Character Encoding: <a href="http://htmlpurifier.org/docs/enduser-utf8.html" target="_blank">htmlpurifier.org/docs/enduser-utf8.html</a>
-</p>
 <p>Guide to getting PHP, utf-8 and mysql to play together: <a
-            href="https://www.toptal.com/php/a-utf-8-primer-for-php-and-mysql" target="_blank">www.toptal.com/php/a-utf-8-primer-for-php-and-mysql</a>
+        href="https://www.toptal.com/php/a-utf-8-primer-for-php-and-mysql" target="_blank">www.toptal.com/php/a-utf-8-primer-for-php-and-mysql</a>
 </p>
 <p>PHP setlocale: <a href="https://www.php.net/manual/en/function.setlocale.php" target="_blank">php.net/manual/en/function.setlocale.php</a>
 </p>
@@ -209,15 +205,15 @@ check_locales($spanish, 'Spanish');
 <p>Globalization: <a href="https://docs.microsoft.com/en-us/dotnet/standard/globalization-localization/globalization" target="_blank">docs.microsoft.com/en-us/dotnet/standard/globalization-localization/globalization</a>
 </p>
 <p>Windows Country/Region Strings: <a href="https://docs.microsoft.com/en-us/cpp/c-runtime-library/country-region-strings?view=vs-2019"
-                                       target="_blank">docs.microsoft.com/en-us/cpp/c-runtime-library/country-region-strings?view=vs-2019</a>
+                                      target="_blank">docs.microsoft.com/en-us/cpp/c-runtime-library/country-region-strings?view=vs-2019</a>
 </p>
 <p>Windows Language Strings: <a href="https://docs.microsoft.com/en-us/cpp/c-runtime-library/language-strings?view=vs-2019" target="_blank">docs.microsoft.com/en-us/cpp/c-runtime-library/language-strings?view=vs-2019</a>
 </p>
 <p>Windows Language Code Identifiers (LCID): <a href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/70feba9f-294e-491e-b6eb-56532684c37f"
-                                                     target="_blank">https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/70feba9f-294e-491e-b6eb-56532684c37f</a>
+                                                target="_blank">https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/70feba9f-294e-491e-b6eb-56532684c37f</a>
 </p>
 <p>Locales and Languages (Windows): <a
-            href="https://docs.microsoft.com/en-us/windows/desktop/intl/locales-and-languages" target="_blank">docs.microsoft.com/en-us/windows/desktop/intl/locales-and-languages</a>x
+        href="https://docs.microsoft.com/en-us/windows/desktop/intl/locales-and-languages" target="_blank">docs.microsoft.com/en-us/windows/desktop/intl/locales-and-languages</a>x
 </p>
 </body>
 </html>
