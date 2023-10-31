@@ -4,3 +4,4 @@ Parses arrays of possible locale names, to check which are installed on a server
 It does not need Zen Cart to execute, but I think the best location for this file is /extras.
 
 Instructions are in the script.
+
