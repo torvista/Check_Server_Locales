@@ -44,6 +44,8 @@ $english = [
     'en_GB.utf8',
     'en_US',
     'en_US.utf8',
+    'en_US.utf-8',
+    'en_US.UTF-8',
     'en_us_utf8'
 ];
 
@@ -121,7 +123,7 @@ function check_locales($test_names, $language): void
         }
     }
 }
-$isWindows = stripos(PHP_OS_FAMILY, "win") !== false;
+$isWindows = stripos(PHP_OS_FAMILY, "win") !== false && stripos(PHP_OS_FAMILY, "darwin") === false;
 $currentLocale = setlocale(LC_ALL, 0);
 $os = php_uname();
 $serverInfo = "<h3>$os<br>php: " . PHP_VERSION . '<br>current locale="' . $currentLocale . '"</h3>';
