@@ -1,7 +1,7 @@
-# Check Server Locales (for Zen Cart)
-Parses arrays of possible locale names, to check which are installed on a server (Windows/Unix) and so confirm what you may use for LC_TIME in the two main Zen Cart language files.
+# Check Server Locales for LC-TIME (for Zen Cart)
+Parses arrays of common locale names, to check which are installed on a server (Windows/Unix) and so confirm what name you may use for LC_TIME in the two (storefont/admin) base Zen Cart language files.
 
-It does not need Zen Cart to execute, but I think the best location for this file is /extras.
+The script is stand-alone/it does *not* need Zen Cart to execute: you can locate it anywhere, but probably the most appropriate location is  ``/extras``.
 
-Instructions are in the script.
+If you want to add a check for your language, instructions are in the script.
 

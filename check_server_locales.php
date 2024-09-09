@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * @link https://github.com/torvista/Check_Server_Locales
  * @author torvista
- * @updated 31 10 2023
+ * @updated 09 September 2024
  */
 
 /** This utility checks what locales are installed on this server and so what locale you may put in the main language constants file (the two equivalents to english.php)
@@ -44,9 +44,11 @@ $english = [
     'en_GB.utf8',
     'en_US',
     'en_US.utf8',
-    'en_US.utf-8',
-    'en_US.UTF-8',
-    'en_us_utf8'
+    'en_us_utf8',
+    // The following locales cause the following error
+    // "Fatal error: Uncaught Error: Found unconstructed IntlDateFormatter"
+   // 'English_United Kingdom.1252',
+   // 'English_United States.1252'
 ];
 
 //Dutch
@@ -96,9 +98,10 @@ function list_nix_locales($code, $language): void
 {
     echo "<h3>$language: using <em>system('locale -a | grep -i $code')</em></h3>";
     echo "<p>The available 'locale' strings for '$code' on this server are:</p>";
-    echo "<pre>";
-    system("locale -a | grep -i $code");
-    echo "</pre>";
+    //system("locale -a | grep -i $code");
+    $result = '';
+    $result = shell_exec("locale -a | grep -i $code");
+    echo (!empty($result) ? "<pre>$result</pre>" : '<strong>NO LOCALES FOUND</strong>');
 }
 
 /**
@@ -111,7 +114,7 @@ function check_locales($test_names, $language): void
     echo "<h3>$language</h3>";
     foreach ($test_names as $value) {
         echo '<hr style="margin-left:0;width:30%">';
-        echo "<p>test locale: '<em>$value</em>'</p>";
+        echo "<p>testing locale: '<em>$value</em>'</p>";
         $locale_found = setlocale(LC_TIME, $value);
 
         if ($locale_found !== false) {
@@ -138,20 +141,20 @@ $serverInfo = "<h3>$os<br>php: " . PHP_VERSION . '<br>current locale="' . $curre
         body {
             padding: 1em;
             font-family: Verdana, Geneva, sans-serif;
-            font-size: .8em
+            font-size: .8em;
         }
         code, pre {
-            font-size: 1.4em
+            font-size: 1.4em;
         }
         h1 {
             font-size: 1.2em;
             text-decoration: underline;
         }
         h2 {
-            font-size: 1.1em
+            font-size: 1.1em;
         }
         h3 {
-            font-size: 1em
+            font-size: 1em;
         }
     </style>
 </head>
