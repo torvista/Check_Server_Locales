@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * @link https://github.com/torvista/Check_Server_Locales
  * @author torvista
- * @updated 09 September 2024
+ * @version 23 October 2025
  */
 
 /** This utility checks what locales are installed on this server and so what locale you may put in the main language constants file (the two equivalents to english.php)
@@ -77,6 +77,7 @@ $spanish = [
     'es',
     'es-es',
     'es-ES', //Windows
+    'es_ES', //Unix
     //'esp_esp',
     //'esp_spain',
     'es_ES.utf8',
@@ -96,10 +97,9 @@ $spanish = [
  */
 function list_nix_locales($code, $language): void
 {
-    echo "<h3>$language: using <em>system('locale -a | grep -i $code')</em></h3>";
+    echo "<h3>$language: using <em>shell_exec('locale -a | grep -i $code')</em></h3>";
     echo "<p>The available 'locale' strings for '$code' on this server are:</p>";
     //system("locale -a | grep -i $code");
-    $result = '';
     $result = shell_exec("locale -a | grep -i $code");
     echo (!empty($result) ? "<pre>$result</pre>" : '<strong>NO LOCALES FOUND</strong>');
 }
@@ -127,7 +127,7 @@ function check_locales($test_names, $language): void
     }
 }
 $isWindows = stripos(PHP_OS_FAMILY, "win") !== false && stripos(PHP_OS_FAMILY, "darwin") === false;
-$currentLocale = setlocale(LC_ALL, 0);
+$currentLocale = setlocale(LC_ALL, null);
 $os = php_uname();
 $serverInfo = "<h3>$os<br>php: " . PHP_VERSION . '<br>current locale="' . $currentLocale . '"</h3>';
 ?>
@@ -172,7 +172,7 @@ if ($isWindows) { ?>
     <h3><?= $serverInfo; ?></h3>
     <p>It is possible to get a listing of all the installed locales in Windows with the Windows Powershell (requires
         .net).</p>
-    <div style="margin-left: 50px">
+    <div style="margin-left: 50px;">
         <p>Open Windows Powershell console, eg: <code>PS C:\Users\YOU></code></p>
         <p>Enter the command as shown to get the listing:</p>
         <p><code>[System.Globalization.Cultureinfo]::GetCultures('AllCultures')</code></p>
